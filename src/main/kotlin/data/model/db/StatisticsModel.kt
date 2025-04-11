@@ -1,4 +1,4 @@
-package com.glamvibe.data.model
+package com.glamvibe.data.model.db
 
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass

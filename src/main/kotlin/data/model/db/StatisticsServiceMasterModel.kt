@@ -1,4 +1,4 @@
-package com.glamvibe.data.model
+package com.glamvibe.data.model.db
 
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table

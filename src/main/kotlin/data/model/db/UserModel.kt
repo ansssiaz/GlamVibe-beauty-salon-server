@@ -1,4 +1,4 @@
-package com.glamvibe.data.model
+package com.glamvibe.data.model.db
 
 import com.glamvibe.domain.model.Role
 import com.glamvibe.domain.model.User
@@ -17,9 +17,10 @@ object UsersTable : IntIdTable("users") {
     val phone = varchar("phone", 15)
     val email = varchar("email", 50)
     val login = varchar("login", 50)
-    val passwordHash = varchar("password_hash", 50)
+    val passwordHash = varchar("password_hash", 100)
     val refreshToken = varchar("refresh_token", 100).nullable()
     val role = varchar("role", 15)
+    val refreshTokenExpirationTime = long("refresh_token_expiration_time").nullable()
 }
 
 class UserEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -33,6 +34,7 @@ class UserEntity(id: EntityID<Int>) : IntEntity(id) {
     var email by UsersTable.email
     var login by UsersTable.login
     var passwordHash by UsersTable.passwordHash
+    var refreshTokenExpirationTime by UsersTable.refreshTokenExpirationTime
     val form by FormEntity optionalBackReferencedOn FormsTable.clientId
     var favourites by ServiceEntity via FavouritesTable
     var refreshToken by UsersTable.refreshToken
@@ -53,6 +55,7 @@ fun userEntityToUser(userEntity: UserEntity): User {
             login = userEntity.login,
             passwordHash = userEntity.passwordHash,
             refreshToken = userEntity.refreshToken,
+            refreshTokenExpirationTime = userEntity.refreshTokenExpirationTime,
             role = Role.valueOf("ADMINISTRATOR")
         )
 
@@ -67,6 +70,7 @@ fun userEntityToUser(userEntity: UserEntity): User {
             login = userEntity.login,
             passwordHash = userEntity.passwordHash,
             refreshToken = userEntity.refreshToken,
+            refreshTokenExpirationTime = userEntity.refreshTokenExpirationTime,
             role = Role.valueOf("CLIENT"),
             form = userEntity.form?.let { formEntityToForm(it) },
             //favourites = userEntity.favourites

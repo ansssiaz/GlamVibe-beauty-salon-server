@@ -1,20 +1,19 @@
-package com.glamvibe.data.model
+package com.glamvibe.data.model.db
 
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
 
-object FavouritesTable : Table("favourites") {
-    val clientId = reference(
-        "client_id",
-        UsersTable,
+object MastersCategoryTable : Table("master_category") {
+    val masterId = reference(
+        "master_id",
+        MastersTable,
         onDelete = ReferenceOption.CASCADE,
         onUpdate = ReferenceOption.CASCADE
     )
-    val serviceId = reference(
-        "service_id",
-        ServicesTable,
+    val categoryId = reference(
+        "category_id",
+        CategoriesTable,
         onDelete = ReferenceOption.CASCADE,
         onUpdate = ReferenceOption.CASCADE
     )
 }
-

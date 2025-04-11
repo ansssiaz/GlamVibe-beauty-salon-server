@@ -1,12 +1,12 @@
-package com.glamvibe.data.model
+package com.glamvibe.data.model.db
 
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
 
-object PromotionServiceTable : Table("promotion_service") {
-    val promotionId = reference(
-        "promotion_id",
-        PromotionsTable,
+object FavouritesTable : Table("favourites") {
+    val clientId = reference(
+        "client_id",
+        UsersTable,
         onDelete = ReferenceOption.CASCADE,
         onUpdate = ReferenceOption.CASCADE
     )
@@ -16,6 +16,5 @@ object PromotionServiceTable : Table("promotion_service") {
         onDelete = ReferenceOption.CASCADE,
         onUpdate = ReferenceOption.CASCADE
     )
-    val priceWithPromotion = integer("price_with_promotion")
-    val discountPercentage = integer("discount_percentage")
 }
+
