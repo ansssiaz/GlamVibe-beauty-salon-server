@@ -1,4 +1,4 @@
-package com.glamvibe.data.model
+package com.glamvibe.data.model.db
 
 import com.glamvibe.domain.model.Category
 import org.jetbrains.exposed.dao.IntEntity

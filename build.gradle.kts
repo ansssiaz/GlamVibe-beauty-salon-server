@@ -33,6 +33,7 @@ dependencies {
     implementation(libs.h2)
     implementation(libs.postgresql)
     implementation(libs.hikari)
+    implementation(libs.bcrypt)
     implementation(libs.ktor.server.auth.jwt)
     implementation(libs.ktor.server.netty)
     implementation(libs.logback.classic)

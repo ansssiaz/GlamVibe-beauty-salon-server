@@ -1,17 +1,17 @@
-package com.glamvibe.data.model
+package com.glamvibe.data.model.db
 
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
 
-object FormsServicesRelationsTable : Table("forms_services_relations") {
-    val formId = reference(
-        "form_id",
-        FormsTable,
+object ServicesRelationsTable : Table("services_relations") {
+    val serviceId1 = reference(
+        "service_id1",
+        ServicesTable,
         onDelete = ReferenceOption.CASCADE,
         onUpdate = ReferenceOption.CASCADE
     )
-    val serviceId = reference(
-        "service_id",
+    val serviceId2 = reference(
+        "service_id2",
         ServicesTable,
         onDelete = ReferenceOption.CASCADE,
         onUpdate = ReferenceOption.CASCADE
