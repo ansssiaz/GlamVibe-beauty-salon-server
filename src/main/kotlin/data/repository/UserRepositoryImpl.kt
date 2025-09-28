@@ -1,9 +1,6 @@
 package com.glamvibe.data.repository
 
-import com.glamvibe.data.model.db.FormEntity
-import com.glamvibe.data.model.db.UserEntity
-import com.glamvibe.data.model.db.UsersTable
-import com.glamvibe.data.model.db.userEntityToUser
+import com.glamvibe.data.model.db.*
 import com.glamvibe.domain.model.User
 import com.glamvibe.domain.model.getStringByRole
 import com.glamvibe.domain.repository.UserRepository
@@ -47,7 +44,7 @@ class UserRepositoryImpl : UserRepository {
             val updatedUser = UserEntity.findByIdAndUpdate(id) {
                 it.refreshToken = refreshToken
                 it.refreshTokenExpirationTime = expirationTime
-            } ?: throw IllegalArgumentException("User not found")
+            } ?: throw IllegalArgumentException("User is not found")
             userEntityToUser(updatedUser)
         }
 
@@ -75,27 +72,28 @@ class UserRepositoryImpl : UserRepository {
 
     override suspend fun registerUser(user: RegisterUser): User = suspendTransaction {
         val hash = Bcrypt.hash(user.password, 12)
-        val newUser = userEntityToUser(
-            UserEntity.new {
-                lastname = user.lastname
-                name = user.name
-                patronymic = user.patronymic
-                birthDate = user.birthDate.toJavaLocalDate()
-                phone = user.phone
-                email = user.email
-                login = user.login
-                passwordHash = hash.toString()
-                role = user.role.getStringByRole()
-            }
-        )
-/*        if (user.role == Role.CLIENT && user.form != null) {
-            FormEntity.new { clientData = user.form }
-        }*/
+        val newUserEntity = UserEntity.new {
+            lastname = user.lastname
+            name = user.name
+            patronymic = user.patronymic
+            birthDate = user.birthDate.toJavaLocalDate()
+            phone = user.phone
+            email = user.email
+            login = user.login
+            passwordHash = hash.encodeBase64()
+            role = user.role.getStringByRole()
+        }
+        val newUser = userEntityToUser(newUserEntity)
+        if (user.role == Role.CLIENT && user.formData != null) {
+            newUser.form = formEntityToForm(FormEntity.new {
+                client = newUserEntity
+                clientData = user.formData
+            })
+        }
         newUser
     }
 
     override suspend fun updateUserData(id: Int, user: UpdateUser): User = suspendTransaction {
-        val passwordHash = Bcrypt.hash(user.password, 12)
         val updatedClient = UserEntity.findByIdAndUpdate(id) {
             it.lastname = user.lastname
             it.name = user.name
@@ -103,9 +101,16 @@ class UserRepositoryImpl : UserRepository {
             it.birthDate = user.birthDate.toJavaLocalDate()
             it.phone = user.phone
             it.email = user.email
-            it.passwordHash = passwordHash.encodeBase64()
-            println(passwordHash.encodeBase64())
-        } ?: throw IllegalArgumentException("Client not found")
+
+            if (user.login.isNotBlank()) {
+                it.login = user.login
+            }
+
+            if (user.password.isNotBlank()) {
+                val passwordHash = Bcrypt.hash(user.password, 12)
+                it.passwordHash = passwordHash.encodeBase64()
+            }
+        } ?: throw IllegalArgumentException("User is not found")
         userEntityToUser(updatedClient)
     }
 

@@ -1,5 +1,8 @@
 package com.glamvibe.data.model.db
 
+import com.glamvibe.domain.model.WorkingDay
+import com.glamvibe.domain.model.getWeekDayByString
+import kotlinx.datetime.toKotlinLocalTime
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -27,3 +30,9 @@ class ScheduleEntity(id: EntityID<Int>) : IntEntity(id) {
     var startTime by SchedulesTable.startTime
     var endTime by SchedulesTable.endTime
 }
+
+fun scheduleEntityToWorkingDay(scheduleEntity: ScheduleEntity) = WorkingDay(
+    weekDay = scheduleEntity.weekDay.getWeekDayByString(),
+    startTime = scheduleEntity.startTime.toKotlinLocalTime(),
+    endTime = scheduleEntity.endTime.toKotlinLocalTime()
+)

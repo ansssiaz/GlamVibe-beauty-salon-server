@@ -22,7 +22,7 @@ data class RegisterUser(
     val login: String,
     val password: String,
     val role: Role,
-    val form: String?,
+    val formData: String?,
 )
 
 @Serializable

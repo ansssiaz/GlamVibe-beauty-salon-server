@@ -1,23 +1,65 @@
 package com.glamvibe.domain.model
 
-import io.ktor.util.date.*
+import com.glamvibe.utils.Constants
+import kotlinx.datetime.*
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
-import java.time.LocalDate
 
 enum class Status {
-    InProcessing, Waiting, Done, CancellationByTheClient, CancellationByTheAdministrator
+    IN_PROCESSING, WAITING, DONE, CANCELLATION_BY_THE_CLIENT, CANCELLATION_BY_THE_ADMINISTRATOR
+}
+
+fun String.getStatusByString(): Status {
+    return when (this) {
+        Constants.Status.IN_PROCESSING -> Status.IN_PROCESSING
+        Constants.Status.WAITING -> Status.WAITING
+        Constants.Status.DONE -> Status.DONE
+        Constants.Status.CANCELLATION_BY_THE_CLIENT -> Status.CANCELLATION_BY_THE_CLIENT
+        Constants.Status.CANCELLATION_BY_THE_ADMINISTRATOR -> Status.CANCELLATION_BY_THE_ADMINISTRATOR
+
+        else -> Status.IN_PROCESSING
+    }
+}
+
+
+fun Status.getStringByStatus(): String {
+    return when (this) {
+        Status.IN_PROCESSING -> Constants.Status.IN_PROCESSING
+        Status.WAITING -> Constants.Status.WAITING
+        Status.DONE -> Constants.Status.DONE
+        Status.CANCELLATION_BY_THE_CLIENT -> Constants.Status.CANCELLATION_BY_THE_CLIENT
+        Status.CANCELLATION_BY_THE_ADMINISTRATOR -> Constants.Status.CANCELLATION_BY_THE_ADMINISTRATOR
+    }
 }
 
 @Serializable
 data class Appointment(
-    val id: Long = 0L,
-    val clientId: Long = 0L,
-    val serviceId: Long = 0L,
-    val masterId: Long = 0L,
-    val promotionId: Long? = 0L,
-    @Contextual val date: LocalDate = LocalDate.now(),
+    val id: Int = 0,
+    val client: ClientData,
+    val master: MasterData,
+    val service: String = "",
+    val promotionId: Int? = 0,
+    @Contextual val date: LocalDate = Clock.System.now()
+        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
+    @Contextual val time: LocalTime = Clock.System.now()
+        .toLocalDateTime(TimeZone.currentSystemDefault()).time,
     val weekDay: WeekDay = WeekDay.MONDAY,
-    val status: Status = Status.InProcessing,
+    val status: Status = Status.IN_PROCESSING,
     val comment: String? = null,
+)
+
+@Serializable
+data class ClientData(
+    val id: Int = 0,
+    val lastname: String = "",
+    val name: String = "",
+    val patronymic: String? = null,
+)
+
+@Serializable
+data class MasterData(
+    val id: Int = 0,
+    val lastname: String = "",
+    val name: String = "",
+    val patronymic: String? = null,
 )

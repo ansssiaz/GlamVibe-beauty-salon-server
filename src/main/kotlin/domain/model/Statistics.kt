@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import java.time.LocalDate
 
 @Serializable
-data class MonthlyStatistics(
+data class Statistics(
     val id: Long = 0L,
     @Contextual val creationDate: LocalDate = LocalDate.now(),
     val year: Int = 2025,

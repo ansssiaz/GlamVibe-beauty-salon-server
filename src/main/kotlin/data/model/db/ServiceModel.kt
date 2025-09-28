@@ -40,28 +40,10 @@ fun serviceEntityToService(serviceEntity: ServiceEntity): Service {
     val promotionsServiceInfo = PromotionServiceTable.innerJoin(ServicesTable).innerJoin(PromotionsTable)
         .select(PromotionServiceTable.columns + PromotionsTable.columns)
         .where {
-            (PromotionServiceTable.serviceId eq serviceEntity.id.value)
+            (PromotionServiceTable.serviceId eq serviceEntity.id)
         }
 
     val currentDate = LocalDate.now()
-
-    /* val promotion = if (!promotionsServiceInfo.empty()) {
-         promotionsServiceInfo.map {
-             it[PromotionServiceTable.promotionId]
-         }.map {
-             PromotionsTable.innerJoin(PromotionServiceTable)
-                 .select(PromotionsTable.columns)
-                 .where { (PromotionsTable.id eq it.value) }
-                 .single()
-         }
-             .maxByOrNull { it[PromotionsTable.startDate] }?.takeIf {
-                 currentDate.isAfter(it[PromotionsTable.startDate]) && currentDate.isBefore(
-                     it[PromotionsTable.endDate]
-                 )
-             }
-     } else {
-         null
-     }*/
 
     val promotionRow = promotionsServiceInfo.mapNotNull {
         val startDate = it[PromotionsTable.startDate]
@@ -72,6 +54,14 @@ fun serviceEntityToService(serviceEntity: ServiceEntity): Service {
             null
         }
     }.maxByOrNull { it[PromotionsTable.startDate] }
+
+    val promotionId = promotionRow?.let {
+        it[PromotionsTable.id]
+    }
+
+    val promotionName = promotionRow?.let {
+        it[PromotionsTable.promotionName]
+    }
 
     val priceWithPromotion = promotionRow?.let {
         it[PromotionServiceTable.priceWithPromotion]
@@ -89,6 +79,8 @@ fun serviceEntityToService(serviceEntity: ServiceEntity): Service {
         imageUrl = serviceEntity.imageUrl,
         duration = serviceEntity.duration,
         price = serviceEntity.price,
+        promotionId = promotionId?.value,
+        promotionName = promotionName,
         priceWithPromotion = priceWithPromotion,
         discountPercentage = discountPercentage,
     )

@@ -1,6 +1,7 @@
 package com.glamvibe.data.model.db
 
 import com.glamvibe.domain.model.Promotion
+import kotlinx.datetime.toKotlinLocalDate
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -33,43 +34,11 @@ fun promotionEntityToPromotion(promotionEntity: PromotionEntity): Promotion {
     return Promotion(
         id = promotionEntity.id.value,
         name = promotionEntity.promotionName,
-        startDate = promotionEntity.startDate,
-        endDate = promotionEntity.endDate,
+        startDate = promotionEntity.startDate.toKotlinLocalDate(),
+        endDate = promotionEntity.endDate.toKotlinLocalDate(),
         imageUrl = promotionEntity.imageUrl,
         isCurrent = currentDate.isAfter(promotionEntity.startDate) && currentDate.isBefore(promotionEntity.endDate),
         description = promotionEntity.description,
-        services = promotionEntity.services.map {
-            serviceEntityToService(it)
-            /*val promotionServiceInfo = PromotionServiceTable.innerJoin(ServicesTable).innerJoin(PromotionsTable)
-                .select(PromotionServiceTable.columns)
-                .where {
-                    (PromotionServiceTable.serviceId eq service.id) and (PromotionServiceTable.promotionId eq promotionEntity.id)
-                }.singleOrNull()
-
-            Service(
-                id = service.id.value,
-                name = service.serviceName,
-                description = service.description,
-                imageUrl = service.imageUrl,
-                duration = service.duration,
-                price = service.price,
-                priceWithPromotion = if (promotionServiceInfo != null && currentDate.isAfter(promotionEntity.startDate) && currentDate.isBefore(
-                        promotionEntity.endDate
-                    )
-                ) {
-                    promotionServiceInfo[PromotionServiceTable.priceWithPromotion]
-                } else {
-                    null
-                },
-                discountPercentage = if (promotionServiceInfo != null && currentDate.isAfter(promotionEntity.startDate) && currentDate.isBefore(
-                        promotionEntity.endDate
-                    )
-                ) {
-                    promotionServiceInfo[PromotionServiceTable.discountPercentage]
-                } else {
-                    null
-                }
-            )*/
-        }
+        services = promotionEntity.services.map { serviceEntityToService(it) }
     )
 }
