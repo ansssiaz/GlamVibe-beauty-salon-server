@@ -8,6 +8,7 @@ logback-version = "1.4.14"
 postgres-version = "42.7.5"
 hikari-version = "6.3.0"
 bcrypt-version = "1.0.9"
+smile-kotlin-version = "4.3.0"
 
 [libraries]
 ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor-version" }
@@ -28,6 +29,7 @@ postgresql = { module = "org.postgresql:postgresql", version.ref = "postgres-ver
 ktor-server-auth-jwt = { module = "io.ktor:ktor-server-auth-jwt", version.ref = "ktor-version" }
 ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor-version" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback-version" }
+smile-kotlin = { module = "com.github.haifengl:smile-kotlin", version.ref = "smile-kotlin-version" }
 ktor-server-config-yaml = { module = "io.ktor:ktor-server-config-yaml", version.ref = "ktor-version" }
 ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor-version" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin-version" }

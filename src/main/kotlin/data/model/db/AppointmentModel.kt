@@ -1,5 +1,8 @@
 package com.glamvibe.data.model.db
 
+import com.glamvibe.domain.model.*
+import kotlinx.datetime.toKotlinLocalDate
+import kotlinx.datetime.toKotlinLocalTime
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -53,3 +56,26 @@ class AppointmentEntity(id: EntityID<Int>) : IntEntity(id) {
     var status by AppointmentsTable.status
     var comment by AppointmentsTable.comment
 }
+
+fun appointmentEntityToAppointment(appointmentEntity: AppointmentEntity) = Appointment(
+    id = appointmentEntity.id.value,
+    client = ClientData(
+        id = appointmentEntity.client.id.value,
+        lastname = appointmentEntity.client.lastname,
+        name = appointmentEntity.client.name,
+        patronymic = appointmentEntity.client.patronymic
+    ),
+    master = MasterData(
+        id = appointmentEntity.master.id.value,
+        lastname = appointmentEntity.master.lastname,
+        name = appointmentEntity.master.name,
+        patronymic = appointmentEntity.master.patronymic
+    ),
+    service = appointmentEntity.service.serviceName,
+    promotionId = appointmentEntity.promotion?.id?.value,
+    date = appointmentEntity.appointmentDate.toKotlinLocalDate(),
+    time = appointmentEntity.appointmentTime.toKotlinLocalTime(),
+    weekDay = appointmentEntity.weekDay.getWeekDayByString(),
+    status = appointmentEntity.status.getStatusByString(),
+    comment = appointmentEntity.comment
+    )

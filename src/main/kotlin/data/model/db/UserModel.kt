@@ -73,7 +73,7 @@ fun userEntityToUser(userEntity: UserEntity): User {
             refreshTokenExpirationTime = userEntity.refreshTokenExpirationTime,
             role = Role.valueOf("CLIENT"),
             form = userEntity.form?.let { formEntityToForm(it) },
-            //favourites = userEntity.favourites
+            favouritesIds = userEntity.favourites.map { it.id.value }
         )
 
         else -> throw IllegalArgumentException("Unknown role: $userEntity.role")

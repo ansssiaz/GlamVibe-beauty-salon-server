@@ -17,4 +17,3 @@ object FavouritesTable : Table("favourites") {
         onUpdate = ReferenceOption.CASCADE
     )
 }
-

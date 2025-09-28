@@ -8,16 +8,6 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-@Serializable
-data class Form(
-    val id: Int = 0,
-    val clientData: String = "",
-)
-
-enum class Role {
-    CLIENT, ADMINISTRATOR
-}
-
 fun String.getRoleByString(): Role {
     return when (this) {
         Constants.Role.ADMINISTRATOR -> Role.ADMINISTRATOR
@@ -33,12 +23,23 @@ fun Role.getStringByRole(): String{
 }
 
 @Serializable
+data class Form(
+    val id: Int = 0,
+    val clientData: String = "",
+)
+
+enum class Role {
+    CLIENT, ADMINISTRATOR
+}
+
+@Serializable
 data class User(
     val id: Int = 0,
     val lastname: String = "",
     val name: String = "",
     val patronymic: String? = "",
-    @Contextual val birthDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+    @Contextual val birthDate: LocalDate = Clock.System.now()
+        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
     val phone: String = "",
     val email: String = "",
     val login: String = "",
@@ -47,5 +48,5 @@ data class User(
     val refreshTokenExpirationTime: Long? = null,
     val role: Role = Role.CLIENT,
     val favouritesIds: List<Int?> = emptyList<Int>(),
-    val form: Form? = null,
+    var form: Form? = null,
 )

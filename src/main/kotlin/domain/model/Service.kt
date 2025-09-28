@@ -18,7 +18,8 @@ data class Service(
     val imageUrl: String = "",
     val duration: Int = 0,
     val price: Int = 0,
+    val promotionId: Int? = null,
+    val promotionName: String? = null,
     val priceWithPromotion: Int? = null,
     val discountPercentage: Int? = null,
-    val isFavourite: Boolean = false
 )
